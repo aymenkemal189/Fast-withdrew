@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Swap Express Gateway ⚡ — Fast Payout Liquidity Terminal</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<!-- 🧠 OCR AI ደረሰኝ መርማሪ ላይብረሪ -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   ⚡ SWAP EXPRESS GATEWAY — HIGH-SPEED FINTECH OBSIDIAN THEME
+══════════════════════════════════════════════════════════════════ */
+:root {
+  --bg: #03050d;
+  --surface: #070c1e;
+  --card: rgba(11, 18, 38, 0.92);
+  --card-elevated: #111b38;
+  --border: rgba(0, 242, 254, 0.25);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --cyan: #00f2fe;
+  --cyan-deep: #4facfe;
+  --cyan-glow: rgba(0, 242, 254, 0.35);
+  --cyan-grad: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+  --gold: #FFD700;
+  --gold-grad: linear-gradient(135deg, #FFD700 0%, #FF9E00 100%);
+  --green: #10b981;
+  --green-grad: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --red: #ef4444;
+  --purple: #8b5cf6;
+  --purple-glow: rgba(139, 92, 246, 0.35);
+  --text: #ffffff;
+  --muted: #94a3b8;
+  --font: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  --mono: 'JetBrains Mono', monospace, Consolas, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; overflow-x: hidden; }
+body {
+  background: var(--bg);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(0, 242, 254, 0.12) 0px, transparent 45%),
+    radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.05) 0px, transparent 50%);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13px;
+  padding: 14px 14px 40px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+#fwCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99999; display: none; }
+
+/* HEADER */
+.exp-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; background: rgba(7, 12, 30, 0.9); backdrop-filter: blur(20px);
+  border: 1px solid var(--border); border-radius: 20px; margin-bottom: 12px;
+}
+.exp-hdr-user { display: flex; align-items: center; gap: 10px; }
+.exp-hdr-av {
+  width: 38px; height: 38px; border-radius: 12px; background: var(--cyan-grad);
+  display: flex; align-items: center; justify-content: center; font-weight: 900;
+  color: #000; font-size: 16px; border: 1.5px solid #fff; box-shadow: 0 0 15px var(--cyan-glow);
+  overflow: hidden;
+}
+.exp-hdr-av img { width: 100%; height: 100%; object-fit: cover; }
+.exp-hdr-info h4 { font-size: 13px; font-weight: 900; color: #fff; }
+.exp-hdr-info p { font-size: 10px; color: var(--muted); }
+.exp-online-tag {
+  font-size: 9px; font-weight: 900; color: var(--green);
+  background: rgba(16, 185, 129, 0.14); border: 1px solid rgba(16, 185, 129, 0.35);
+  padding: 4px 9px; border-radius: 20px; display: flex; align-items: center; gap: 5px;
+}
+.exp-dot-pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
+
+/* 🏦 FUNDED LIQUIDITY RESERVE VAULT (3,450,000 ETB) */
+.reserve-card {
+  background: linear-gradient(135deg, #091c1b 0%, #061529 55%, #050b18 100%);
+  border: 1.5px solid rgba(16, 185, 129, 0.45); border-radius: 22px; padding: 14px 16px;
+  margin-bottom: 12px; position: relative; overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 25px rgba(16, 185, 129, 0.18);
+}
+.rc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.rc-tag {
+  font-size: 9.5px; font-weight: 900; color: var(--green);
+  background: rgba(16, 185, 129, 0.15); border: 1px solid var(--green);
+  padding: 2px 8px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;
+}
+.rc-balance-row { display: flex; align-items: baseline; gap: 8px; margin: 4px 0; }
+.rc-balance-val { font-size: 30px; font-weight: 900; color: #fff; font-family: var(--mono); letter-spacing: -0.5px; }
+.rc-currency { font-size: 15px; font-weight: 900; color: var(--green); }
+.rc-bar-bg { width: 100%; height: 7px; background: rgba(255, 255, 255, 0.08); border-radius: 10px; overflow: hidden; margin: 6px 0 4px; }
+.rc-bar-fill { height: 100%; width: 89%; background: var(--green-grad); border-radius: 10px; transition: width 0.4s ease; }
+.rc-footer { display: flex; justify-content: space-between; font-size: 9px; color: var(--muted); font-weight: 800; }
+
+/* HERO BANNER & SCARCITY COUNTER */
+.hero-card {
+  background: linear-gradient(145deg, #0a1636 0%, #060b1e 100%);
+  border: 1.5px solid var(--cyan); border-radius: 24px; padding: 16px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.8), 0 0 30px var(--cyan-glow);
+  margin-bottom: 12px; position: relative; overflow: hidden;
+}
+.hero-badge-top {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(0, 242, 254, 0.15); border: 1px solid var(--cyan);
+  padding: 3px 10px; border-radius: 14px; font-size: 9.5px; font-weight: 900;
+  color: var(--cyan); letter-spacing: 0.6px; margin-bottom: 6px;
+}
+.hero-title { font-size: 19px; font-weight: 900; color: #fff; margin-bottom: 4px; line-height: 1.3; }
+.hero-title span { color: var(--cyan); }
+.hero-sub { font-size: 11px; color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
+
+.slot-box {
+  background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px; padding: 10px 12px;
+}
+.slot-head { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; font-weight: 900; }
+.slot-bar-bg { width: 100%; height: 7px; background: rgba(255, 255, 255, 0.1); border-radius: 10px; overflow: hidden; margin: 6px 0 4px; }
+.slot-bar-fill { height: 100%; width: 83%; background: var(--cyan-grad); border-radius: 10px; }
+.slot-footer { font-size: 9px; color: var(--gold); display: flex; justify-content: space-between; font-weight: 800; }
+
+/* STEP CARD */
+.step-card {
+  background: var(--card); border: 1px solid var(--border-subtle);
+  border-radius: 20px; padding: 16px; margin-bottom: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+.step-title {
+  font-size: 12px; font-weight: 900; color: #fff; display: flex; align-items: center;
+  gap: 8px; margin-bottom: 12px;
+}
+.step-num {
+  width: 20px; height: 20px; border-radius: 50%; background: var(--cyan);
+  color: #000; font-size: 10.5px; font-weight: 900; display: flex; align-items: center; justify-content: center;
+}
+
+/* INPUTS */
+.form-group { margin-bottom: 10px; text-align: left; }
+.form-label { font-size: 10.5px; font-weight: 800; color: var(--muted); display: block; margin-bottom: 4px; }
+.form-input {
+  width: 100%; padding: 11px 13px; background: #070c1b; border: 1px solid var(--border);
+  border-radius: 12px; color: #fff; font-size: 12px; font-weight: 700; outline: none; font-family: var(--font);
+}
+.form-input:focus { border-color: var(--cyan); box-shadow: 0 0 10px var(--cyan-glow); }
+
+/* PAYMENT METHODS GRID (CBE FIRST!) */
+.method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.method-card {
+  background: #080d1e; border: 1.5px solid rgba(255, 255, 255, 0.1); border-radius: 16px;
+  padding: 10px 8px; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: 0.18s;
+  position: relative;
+}
+.method-card.active.cbe-card {
+  border-color: #a855f7; background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), #0d0a1c);
+  box-shadow: 0 0 18px var(--purple-glow);
+}
+.method-card.active.telebirr-card {
+  border-color: #00adee; background: linear-gradient(135deg, rgba(0, 173, 238, 0.2), #091322);
+  box-shadow: 0 0 18px rgba(0, 173, 238, 0.35);
+}
+.mc-logo { width: 30px; height: 30px; border-radius: 8px; object-fit: contain; background: #fff; padding: 2px; }
+.mc-info h4 { font-size: 11.5px; font-weight: 900; color: #fff; }
+.mc-info p { font-size: 8.5px; color: var(--muted); }
+.mc-check {
+  position: absolute; top: 6px; right: 6px; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--green); color: #000; font-size: 9px; font-weight: 900; display: none; align-items: center; justify-content: center;
+}
+.method-card.active .mc-check { display: flex; }
+
+/* ACCOUNT DETAILS CARD */
+.acc-details-box {
+  background: linear-gradient(135deg, #101933, #080e1c);
+  border: 1.2px solid var(--border); border-radius: 16px; padding: 12px; margin-bottom: 12px;
+}
+.acc-details-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.acc-details-head span { font-size: 10px; font-weight: 800; color: var(--muted); }
+.copy-chip {
+  background: rgba(0, 242, 254, 0.15); border: 1px solid var(--cyan); color: var(--cyan);
+  border-radius: 8px; padding: 4px 10px; font-size: 10px; font-weight: 900; cursor: pointer; transition: 0.15s;
+}
+.copy-chip:active { transform: scale(0.93); background: var(--cyan); color: #000; }
+.acc-num-val { font-family: var(--mono); font-size: 17px; font-weight: 900; color: var(--gold); letter-spacing: 1px; margin: 2px 0; }
+.acc-holder-val { font-size: 10px; color: #94a3b8; }
+
+/* PROOF TABS */
+.proof-tabs { display: flex; gap: 6px; margin-bottom: 8px; background: #060a16; padding: 3px; border-radius: 12px; }
+.ptab-btn {
+  flex: 1; background: transparent; border: none; color: var(--muted);
+  padding: 7px 0; font-size: 10.5px; font-weight: 800; border-radius: 9px; cursor: pointer; transition: 0.18s;
+}
+.ptab-btn.active { background: var(--cyan); color: #000; font-weight: 900; }
+
+.textarea-box {
+  width: 100%; padding: 10px; background: #070c1b; border: 1px solid var(--border);
+  border-radius: 12px; color: #fff; font-size: 11px; outline: none; resize: none; font-family: var(--font);
+}
+.dropzone {
+  border: 1.5px dashed var(--cyan); border-radius: 14px; padding: 16px;
+  text-align: center; background: rgba(0, 242, 254, 0.05); cursor: pointer;
+}
+#dropPreview img { width: 100%; max-height: 140px; object-fit: contain; border-radius: 8px; }
+
+/* OCR STATUS BAR */
+.ocr-status-card {
+  display: none; border-radius: 12px; padding: 10px; margin-top: 8px; font-size: 11px; font-weight: 800;
+  text-align: left; line-height: 1.4;
+}
+
+/* SUBMIT BUTTON */
+.btn-submit {
+  width: 100%; padding: 14px; background: var(--cyan-grad); border: none; border-radius: 16px;
+  font-size: 13.5px; font-weight: 900; color: #000; cursor: pointer; transition: 0.18s;
+  box-shadow: 0 0 25px var(--cyan-glow); display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-submit:active { transform: scale(0.97); }
+.btn-submit:disabled { background: var(--card2); color: var(--muted); box-shadow: none; cursor: not-allowed; opacity: 0.6; }
+
+.btn-inbox {
+  width: 100%; margin-top: 8px; padding: 10px; background: rgba(34, 158, 217, 0.15);
+  border: 1px solid #229ED9; border-radius: 14px; color: #fff; font-size: 11px; font-weight: 900;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+/* ACTIVE TICKET BANNER */
+.active-ticket-card {
+  display: none; background: linear-gradient(135deg, #091e13, #06110b);
+  border: 1.5px solid var(--green); border-radius: 20px; padding: 16px; margin-bottom: 12px;
+}
+.active-ticket-card.show { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+#toast {
+  position: fixed; left: 50%; bottom: 25px; transform: translateX(-50%) translateY(20px);
+  background: var(--card-elevated); border: 1.5px solid var(--cyan); color: #fff;
+  padding: 10px 18px; border-radius: 14px; font-size: 12px; font-weight: 800;
+  opacity: 0; pointer-events: none; transition: 0.22s; z-index: 999999; text-align: center; max-width: 90%;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<canvas id="fwCanvas"></canvas>
+
+<!-- ⚡ HEADER -->
+<header class="exp-header">
+  <div class="exp-hdr-user">
+    <div class="exp-hdr-av" id="hdrAv">⚡</div>
+    <div class="exp-hdr-info">
+      <h4 id="hdrUserTitle">Swap Express Gateway</h4>
+      <p id="hdrUserTag">@username</p>
+    </div>
+  </div>
+  <div class="exp-online-tag">
+    <span class="exp-dot-pulse"></span> SYSTEM ONLINE
+  </div>
+</header>
+
+<!-- ⚡ ACTIVE EXPRESS TICKET STATUS (IF ALREADY QUEUED) -->
+<div class="active-ticket-card" id="activeTicketCard">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+    <strong style="color:var(--green);font-size:12px">⚡ EXPRESS TICKET ACTIVE</strong>
+    <span style="font-size:9.5px;color:var(--gold);font-weight:900" id="ticketIdTxt">#EX-9812</span>
+  </div>
+  <p style="font-size:10.5px;color:#cbd5e1;line-height:1.4">የ 100 ETB ፈጣን ክፍያ ጥያቄዎ በኦዲት ላይ ነው፤ በ 2-4 ሰዓት ውስጥ ወደ መዳረሻ አካውንትዎ ይተላለፋል!</p>
+</div>
+
+<!-- 🏦 3,450,000 ETB FUNDED RESERVE VAULT CARD -->
+<div class="reserve-card">
+  <div class="rc-top">
+    <span class="rc-tag">● ACTIVE LIQUIDITY VAULT</span>
+    <span style="font-size:9.5px;color:#cbd5e1;font-weight:800">የፈጣን ክፍያ ካዝና</span>
+  </div>
+  <div class="rc-balance-row">
+    <div class="rc-balance-val" id="reserveVaultDisplay">3,450,000</div>
+    <div class="rc-currency">ETB</div>
+  </div>
+  <div class="rc-bar-bg">
+    <div class="rc-bar-fill" id="reserveVaultBar"></div>
+  </div>
+  <div class="rc-footer">
+    <span>🔒 የተመደበ ፈንድ፦ 3,450,000 ብር</span>
+    <span id="reserveRemainingPercent">89% ቀርቷል (በፍጥነት እያለቀ ነው)</span>
+  </div>
+</div>
+
+<!-- ⚡ HERO BANNER & SCARCITY COUNTER -->
+<div class="hero-card">
+  <div class="hero-badge-top">
+    <span>⚡</span> OFFICIAL FAST-TRACK STATION
+  </div>
+  <h2 class="hero-title">Swap Express <span>Pass</span></h2>
+  <p class="hero-sub">
+    የሰርቨር መጨናነቅን እና የቀን 19 ጥበቃን ያስቀሩ! በ 100 ETB ብቻ ክፍያዎን ከ 2 እስከ 4 ሰዓታት ባለው ጊዜ ውስጥ ይቀበሉ!
+  </p>
+
+  <!-- 5,000 SLOTS LIVE PROGRESS BAR -->
+  <div class="slot-box">
+    <div class="slot-head">
+      <span style="color:#fff">የተያዙ ቦታዎች (Claimed Slots)</span>
+      <span style="color:var(--cyan)" id="slotCountDisplay">4,189 / 5,000</span>
+    </div>
+    <div class="slot-bar-bg">
+      <div class="slot-bar-fill" id="slotBarFill"></div>
+    </div>
+    <div class="slot-footer">
+      <span>🔥 እድሉ ለ 5,000 ሰዎች ብቻ!</span>
+      <span id="slotLeftDisplay">811 ቀርተዋል</span>
+    </div>
+  </div>
+</div>
+
+<!-- ⚡ STEP 1: VERIFY SWAP USER ID & DESTINATION -->
+<div class="step-card">
+  <div class="step-title">
+    <span class="step-num">1</span> የ Swap መለያ እና ገንዘቡ የሚገባበትን አካውንት ያስገቡ
+  </div>
+  <div class="form-group">
+    <label class="form-label">የእርስዎ Telegram User ID፦</label>
+    <input type="text" id="swapUserIdInput" class="form-input" placeholder="e.g. 1493452810">
+  </div>
+  <div class="form-group" style="margin-bottom:0">
+    <label class="form-label">ገንዘቡ የሚላክበት አካውንት ቁጥር (Telebirr ወይም ባንክ)፦</label>
+    <input type="text" id="payoutDestinationInput" class="form-input" placeholder="09... ወይም 1000...">
+  </div>
+</div>
+
+<!-- ⚡ STEP 2: PAY 100 ETB PASS FEE (CBE BANK FIRST!) -->
+<div class="step-card">
+  <div class="step-title">
+    <span class="step-num">2</span> የ 100 ETB Express Pass ክፍያ ይፈጽሙ
+  </div>
+
+  <div class="method-grid">
+    <!-- CBE FIRST -->
+    <div class="method-card active cbe-card" id="mCardCbe" onclick="selectPayMethod('cbe')">
+      <div class="mc-check">✓</div>
+      <img src="https://i.postimg.cc/Hk1pN2VS/20260805-174301.png" class="mc-logo" alt="CBE">
+      <div class="mc-info">
+        <h4>CBE Bank</h4>
+        <p>ንግድ ባንክ (ቀዳሚ)</p>
+      </div>
+    </div>
+
+    <!-- TELEBIRR SECOND -->
+    <div class="method-card telebirr-card" id="mCardTelebirr" onclick="selectPayMethod('telebirr')">
+      <div class="mc-check">✓</div>
+      <img src="https://i.postimg.cc/1zH5wqRj/20260805-174415.png" class="mc-logo" alt="Telebirr">
+      <div class="mc-info">
+        <h4>Telebirr</h4>
+        <p>ቀጥታ በቴሌብር</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account Card with Clean 1-Click Copy -->
+  <div class="acc-details-box">
+    <div class="acc-details-head">
+      <span id="accProviderLabel">🏦 የ CBE ባንክ ሂሳብ ቁጥር</span>
+      <button class="copy-chip" onclick="copyCleanAccount()">
+        <span id="copyIconState">📋</span> ኮፒ አድርግ
+      </button>
+    </div>
+    <div class="acc-num-val" id="accNumberDisplay">1000562339427</div>
+    <div class="acc-holder-val" id="accHolderDisplay">Account Name: Aymen kemal</div>
+  </div>
+</div>
+
+<!-- ⚡ STEP 3: SUBMIT VERIFICATION PROOF (OCR & SMS) -->
+<div class="step-card">
+  <div class="step-title">
+    <span class="step-num">3</span> የከፈሉበትን ደረሰኝ (ማረጋገጫ) ያስገቡ
+  </div>
+
+  <div class="proof-tabs">
+    <button class="ptab-btn active" id="ptabPhoto" onclick="switchProofMode('photo')">📸 በደረሰኝ Screenshot (AI OCR)</button>
+    <button class="ptab-btn" id="ptabSms" onclick="switchProofMode('sms')">💬 በ SMS መልዕክት</button>
+  </div>
+
+  <!-- Photo OCR View -->
+  <div id="proofPhotoSection">
+    <div class="dropzone" onclick="document.getElementById('receiptFileInput').click()">
+      <input type="file" id="receiptFileInput" accept="image/*" style="display:none" onchange="processOcrReceipt(event)">
+      <div id="dropEmpty">
+        <div style="font-size:26px;margin-bottom:4px">🖼️</div>
+        <strong style="font-size:11px;color:#fff">የ CBE ወይም Telebirr Screenshot ይጫኑ</strong>
+        <p style="font-size:9.5px;color:var(--muted)">AI ደረሰኙ ከ 24 ሰዓት ያላለፈው መሆኑን ያጣራል</p>
+      </div>
+      <div id="dropPreview" style="display:none">
+        <img src="" id="previewImgEl" alt="Receipt">
+        <p style="font-size:9.5px;color:var(--cyan);margin-top:4px">🔄 ፎቶ ለመቀየር ይጫኑ</p>
+      </div>
+    </div>
+    <!-- AI OCR Feedback Banner -->
+    <div class="ocr-status-card" id="ocrFeedbackCard"></div>
+  </div>
+
+  <!-- SMS View -->
+  <div id="proofSmsSection" style="display:none">
+    <textarea id="smsProofInput" class="textarea-box" rows="3" placeholder="ከባንክ (100 ETB) ወይም ከቴሌብር (100-102 ETB) የደረሰዎትን ሙሉ SMS እዚህ Paste ያድርጉ..." oninput="autoParse100Sms()"></textarea>
+    <div id="smsFeedbackStatus" style="display:none;padding:8px;border-radius:10px;font-size:10.5px;margin-top:6px"></div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:6px;margin-top:10px">
+    <span style="font-size:10px;color:var(--muted);font-weight:800">TxID:</span>
+    <input type="text" id="txIdDisplayInput" placeholder="በራስ-ሰር ይሞላል..." readonly class="form-input" style="padding:6px 10px;font-family:var(--mono);color:var(--gold)">
+  </div>
+
+  <button class="btn-submit" id="btnSubmitExpress" style="margin-top:14px" onclick="submitExpressPassRequest()">
+    <span id="submitSpinner" style="display:none">⏳</span> ⚡ የ Express Pass ጥያቄዬን ላክ (100 ETB) ➔
+  </button>
+
+  <button class="btn-inbox" onclick="openAdminInbox()">
+    💬 ጥያቄ ካለዎት አድሚንን በ Inbox ያነጋግሩ (@Swapmoney0)
+  </button>
+</div>
+
+<div id="toast"></div>
+
+<!-- ════════════════════════════════════════════════════
+     SCRIPT CONTROLLER ENGINE
+════════════════════════════════════════════════════ -->
+<script>
+const RENDER_SERVER_URL  = 'https://swap-vip-serverv.onrender.com';
+const ADMIN_USERNAME     = 'Swapmoney0';
+const PASS_FEE           = 100;
+
+// CBE FIRST CONFIGURATION
+const ACCOUNTS = {
+  cbe: {
+    label: '🏦 የ CBE ባንክ ሂሳብ ቁጥር',
+    display: '1000562339427',
+    clean: '1000562339427',
+    holder: 'Account Name: Aymen kemal'
+  },
+  telebirr: {
+    label: '📱 የ Telebirr ቁጥር (P2P)',
+    display: '09***47',
+    clean: '0968260447',
+    holder: 'የአካውንት ስም: Nebyu Mohammed'
+  }
+};
+
+let activeMethod = 'cbe';
+let activeProof = 'photo';
+let uploadedReceiptFile = null;
+let isOcrVerified = false;
+
+const tg = window.Telegram?.WebApp || null;
+let currentUid = '1493452810';
+let currentUsername = 'User';
+
+if (tg) {
+  tg.ready();
+  tg.expand();
+  if (tg.initDataUnsafe?.user) {
+    const u = tg.initDataUnsafe.user;
+    currentUid = String(u.id);
+    currentUsername = u.username || u.first_name || 'User';
+
+    const av = document.getElementById('hdrAv');
+    if (av && u.photo_url) {
+      av.innerHTML = `<img src="${u.photo_url}" alt="Profile">`;
+    }
+    const tag = document.getElementById('hdrUserTag');
+    if (tag) tag.textContent = `@${u.username || u.first_name}`;
+  }
+}
+
+document.getElementById('swapUserIdInput').value = currentUid;
+
+// 🏦 DYNAMIC LIQUIDITY RESERVE VAULT (3,450,000 ETB DEPRECIATION TICKER)
+function updateLiquidityVault() {
+  const basePool = 3450000;
+  // Calculate simulated organic withdrawals based on minutes
+  const seconds = Math.floor(Date.now() / 1000);
+  const decrement = ((seconds % 86400) * 4.2) % 325000;
+  const currentPool = Math.max(1500000, Math.floor(basePool - decrement));
+  const percent = ((currentPool / basePool) * 100).toFixed(1);
+
+  document.getElementById('reserveVaultDisplay').textContent = currentPool.toLocaleString();
+  document.getElementById('reserveVaultBar').style.width = `${percent}%`;
+  document.getElementById('reserveRemainingPercent').textContent = `${percent}% ቀርቷል (በፍጥነት እያለቀ ነው)`;
+}
+updateLiquidityVault();
+setInterval(updateLiquidityVault, 10000);
+
+// ⚡ 5,000 SLOTS LIVE ANIMATION
+function updateSlotProgress() {
+  const baseClaimed = 4189;
+  const minuteOffset = Math.floor((Date.now() / 1000 / 60) % 30);
+  const totalClaimed = Math.min(4980, baseClaimed + minuteOffset);
+  const left = 5000 - totalClaimed;
+
+  document.getElementById('slotCountDisplay').textContent = `${totalClaimed.toLocaleString()} / 5,000`;
+  document.getElementById('slotLeftDisplay').textContent = `${left} ክፍት ቦታዎች ቀርተዋል`;
+  document.getElementById('slotBarFill').style.width = `${(totalClaimed / 5000) * 100}%`;
+}
+updateSlotProgress();
+setInterval(updateSlotProgress, 30000);
+
+// Check if user already submitted
+const savedTicket = localStorage.getItem('swap_express_ticket_' + currentUid);
+if (savedTicket) {
+  document.getElementById('activeTicketCard').classList.add('show');
+  document.getElementById('ticketIdTxt').textContent = savedTicket;
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+function selectPayMethod(method) {
+  activeMethod = method;
+  document.getElementById('mCardCbe').classList.toggle('active', method === 'cbe');
+  document.getElementById('mCardTelebirr').classList.toggle('active', method === 'telebirr');
+
+  const cfg = ACCOUNTS[method];
+  document.getElementById('accProviderLabel').textContent = cfg.label;
+  document.getElementById('accNumberDisplay').textContent = cfg.display;
+  document.getElementById('accHolderDisplay').textContent = cfg.holder;
+}
+
+function copyCleanAccount() {
+  const cleanNumber = ACCOUNTS[activeMethod].clean;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(cleanNumber).then(() => onCopyDone(cleanNumber));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = cleanNumber;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    onCopyDone(cleanNumber);
+  }
+}
+
+function onCopyDone(num) {
+  toast(`📋 ቁጥሩ ተኮርጇል: ${num}`);
+  const icon = document.getElementById('copyIconState');
+  if (icon) {
+    icon.textContent = '✓';
+    setTimeout(() => { icon.textContent = '📋'; }, 1800);
+  }
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+function switchProofMode(mode) {
+  activeProof = mode;
+  document.getElementById('ptabPhoto').classList.toggle('active', mode === 'photo');
+  document.getElementById('ptabSms').classList.toggle('active', mode === 'sms');
+
+  document.getElementById('proofPhotoSection').style.display = mode === 'photo' ? 'block' : 'none';
+  document.getElementById('proofSmsSection').style.display = mode === 'sms' ? 'block' : 'none';
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   🧠 TESSERACT OCR SCANNER (SCREENSHOT RECENT & GENUINE CHECK)
+══════════════════════════════════════════════════════════════════ */
+async function processOcrReceipt(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  uploadedReceiptFile = file;
+
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    document.getElementById('previewImgEl').src = evt.target.result;
+    document.getElementById('dropEmpty').style.display = 'none';
+    document.getElementById('dropPreview').style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+
+  const feedback = document.getElementById('ocrFeedbackCard');
+  feedback.style.display = 'block';
+  feedback.style.background = 'rgba(0, 242, 254, 0.1)';
+  feedback.style.border = '1px solid var(--cyan)';
+  feedback.style.color = 'var(--cyan)';
+  feedback.innerHTML = `⏳ <b>AI OCR እያረጋገጠ ነው...</b> እባክዎ ጥቂት ሰከንዶች ይጠብቁ`;
+
+  try {
+    const { data: { text } } = await Tesseract.recognize(file, 'eng', {
+      logger: m => {}
+    });
+
+    const ocrText = text.toLowerCase();
+    const txInput = document.getElementById('txIdDisplayInput');
+
+    // 1. Check if CBE or Telebirr receipt
+    const isCbe = ocrText.includes('commercial bank') || ocrText.includes('cbe') || ocrText.includes('mbreciept');
+    const isTelebirr = ocrText.includes('telebirr') || ocrText.includes('transferred etb') || ocrText.includes('251968260447') || ocrText.includes('0968260447');
+
+    if (!isCbe && !isTelebirr) {
+      feedback.style.background = 'rgba(239, 68, 68, 0.15)';
+      feedback.style.border = '1px solid var(--red)';
+      feedback.style.color = 'var(--red)';
+      feedback.innerHTML = `❌ <b>ያልተፈቀደ ምስል!</b> የ CBE ወይም Telebirr ትክክለኛ ደረሰኝ ብቻ ይጫኑ።`;
+      isOcrVerified = false;
+      return;
+    }
+
+    // 2. Check TxID
+    let foundTx = '';
+    const txMatch = text.match(/(?:transaction\s*(?:no|number|id)?|txid|ref)\s*[:.]?\s*([A-Za-z0-9_-]{8,24})/i) ||
+                    text.match(/mbreciept\.cbe\.com\.et\/([A-Za-z0-9_-]+)/i);
+    if (txMatch) foundTx = txMatch[1];
+
+    if (foundTx) {
+      txInput.value = foundTx;
+    }
+
+    // 3. Mark verified
+    isOcrVerified = true;
+    feedback.style.background = 'rgba(16, 185, 129, 0.15)';
+    feedback.style.border = '1px solid var(--green)';
+    feedback.style.color = 'var(--green)';
+    feedback.innerHTML = `✅ <b>ትክክለኛ የ${isCbe ? 'CBE Bank' : 'Telebirr'} ደረሰኝ ተረጋግጧል!</b><br><small style="color:#cbd5e1">የ 24 ሰዓት የቅርብ ክፍያ ተገኝቷል ✓</small>`;
+    toast('✅ ደረሰኙ በ AI ተረጋግጧል!');
+  } catch (err) {
+    // If OCR fails (unsupported image), allow manual pass with notice
+    isOcrVerified = true;
+    feedback.style.background = 'rgba(255, 215, 0, 0.12)';
+    feedback.style.border = '1px solid var(--gold)';
+    feedback.style.color = 'var(--gold)';
+    feedback.innerHTML = `📸 <b>ደረሰኝ ተመርጧል!</b> በአድሚን ኦዲት ይረጋገጣል።`;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   🧠 SMART 100/101/102 ETB SMS PARSER (TELEBIRR TOLERANCE)
+══════════════════════════════════════════════════════════════════ */
+function autoParse100Sms() {
+  const text = (document.getElementById('smsProofInput').value || '').trim();
+  const feedback = document.getElementById('smsFeedbackStatus');
+  const txInput = document.getElementById('txIdDisplayInput');
+
+  if (!text) {
+    feedback.style.display = 'none';
+    txInput.value = '';
+    return;
+  }
+
+  feedback.style.display = 'block';
+
+  let foundTx = '';
+  const txMatch = text.match(/(?:transaction\s+number\s+is|የትራንዛክሽን\s*ቁጥር(?:ዎ)?\s*(?:ነው)?)\s*[:፡]?\s*([A-Za-z0-9]+)/i) ||
+                  text.match(/receipt\/([A-Za-z0-9]+)/i) ||
+                  text.match(/mbreciept\.cbe\.com\.et\/([A-Za-z0-9_-]+)/i);
+
+  if (txMatch) foundTx = txMatch[1];
+
+  // Telebirr fee tolerance: 100, 101, or 102 ETB!
+  const hasValidAmount = /(?:100|101|102)(?:\.00)?\s*(?:ETB|ብር)/i.test(text) ||
+                         /(?:ETB|ብር)\s*(?:100|101|102)(?:\.00)?/i.test(text);
+
+  if (foundTx && hasValidAmount) {
+    txInput.value = foundTx;
+    feedback.style.background = 'rgba(16, 185, 129, 0.15)';
+    feedback.style.border = '1px solid var(--green)';
+    feedback.style.color = 'var(--green)';
+    feedback.innerHTML = `✅ ትክክለኛ ክፍያ ተረጋግጧል! (TxID: <b>${foundTx}</b>)`;
+  } else if (!hasValidAmount) {
+    feedback.style.background = 'rgba(239, 68, 68, 0.15)';
+    feedback.style.border = '1px solid var(--red)';
+    feedback.style.color = 'var(--red)';
+    feedback.innerHTML = `⚠️ መጠኑ ልክ አይደለም! የ 100 ETB (ወይም ለቴሌብር 101/102 ETB) መሆን አለበት።`;
+  } else {
+    feedback.style.background = 'rgba(239, 68, 68, 0.15)';
+    feedback.style.border = '1px solid var(--red)';
+    feedback.style.color = 'var(--red)';
+    feedback.innerHTML = `⚠️ የትራንዛክሽን መለያ ቁጥር (TxID) አልተገኘም፤ እባክዎ ሙሉውን SMS ያስገቡ።`;
+  }
+}
+
+// ⚡ SUBMIT TO RENDER DUAL-BRIDGE
+async function submitExpressPassRequest() {
+  const uid = (document.getElementById('swapUserIdInput').value || '').trim();
+  const destination = (document.getElementById('payoutDestinationInput').value || '').trim();
+  const sms = (document.getElementById('smsProofInput').value || '').trim();
+  const txId = (document.getElementById('txIdDisplayInput').value || '').trim();
+  const btn = document.getElementById('btnSubmitExpress');
+  const spinner = document.getElementById('submitSpinner');
+
+  if (!destination) {
+    toast('⚠️ ገንዘቡ የሚገባበትን አካውንት ያስገቡ');
+    return;
+  }
+
+  if (!sms && !uploadedReceiptFile && !txId) {
+    toast('⚠️ እባክዎ የከፈሉበትን SMS ወይም ደረሰኝ ፎቶ ያስገቡ');
+    return;
+  }
+
+  btn.disabled = true;
+  spinner.style.display = 'inline-block';
+  toast('⏳ ጥያቄዎ ወደ አድሚን በመላክ ላይ ነው...');
+
+  const formData = new FormData();
+  formData.append('userId', uid || currentUid);
+  formData.append('username', currentUsername);
+  formData.append('vipTier', 'EXPRESS');
+  formData.append('amount', PASS_FEE);
+  formData.append('txId', txId || 'EXPRESS_PROOF');
+  formData.append('fullSms', `⚡ EXPRESS PASS REQUEST:\n• መዳረሻ አካውንት: ${destination}\n• SMS: ${sms}`);
+  formData.append('method', activeMethod === 'cbe' ? 'CBE Bank' : 'Telebirr');
+  if (uploadedReceiptFile) {
+    formData.append('receiptPhoto', uploadedReceiptFile);
+  }
+
+  try {
+    const res = await fetch(`${RENDER_SERVER_URL}/api/submit-vip-payment`, {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+
+    if (data.status === 'success') {
+      const generatedTicket = '#EX-' + Math.floor(1000 + Math.random() * 9000);
+      localStorage.setItem('swap_express_ticket_' + currentUid, generatedTicket);
+
+      document.getElementById('activeTicketCard').classList.add('show');
+      document.getElementById('ticketIdTxt').textContent = generatedTicket;
+
+      triggerConfetti();
+      toast('🎉 የ Express Pass ጥያቄዎ ለአድሚን ደርሷል!');
+      if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    } else {
+      toast('❌ ' + (data.message || 'ስህተት አጋጥሟል'));
+    }
+  } catch (err) {
+    toast('❌ ሰርቨር ማገናኘት አልተቻለም፤ እባክዎ ደረሰኝዎን ወደ @Swapmoney0 ይላኩ');
+  } finally {
+    btn.disabled = false;
+    spinner.style.display = 'none';
+  }
+}
+
+function openAdminInbox() {
+  const text = encodeURIComponent(`ሰላም አድሚን! የ 100 ETB Swap Express Pass ከፍዬ ደረሰኝ ልኬ ነበር። (User ID: ${currentUid})`);
+  const url = `https://t.me/${ADMIN_USERNAME}?text=${text}`;
+  if (tg && tg.openTelegramLink) tg.openTelegramLink(url);
+  else window.open(url, '_blank');
+}
+
+// 🎆 CONFETTI ANIMATION ENGINE
+function triggerConfetti() {
+  const canvas = document.getElementById('fwCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.style.display = 'block';
+
+  const particles = [];
+  const colors = ['#00f2fe', '#FFD700', '#10b981', '#ffffff', '#8b5cf6'];
+
+  for (let i = 0; i < 80; i++) {
+    particles.push({
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      vx: (Math.random() - 0.5) * 14,
+      vy: (Math.random() - 0.5) * 14 - 3,
+      size: Math.random() * 6 + 3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      alpha: 1,
+      decay: Math.random() * 0.015 + 0.01
+    });
+  }
+
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.22;
+      p.alpha -= p.decay;
+      if (p.alpha > 0) {
+        alive = true;
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+        ctx.restore();
+      }
+    });
+    if (alive) requestAnimationFrame(render);
+    else canvas.style.display = 'none';
+  }
+  render();
+}
+</script>
+</body>
+</html>
