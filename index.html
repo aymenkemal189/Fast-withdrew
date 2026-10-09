@@ -16,17 +16,15 @@
   --surface: #0e121d;
   --card: rgba(16, 21, 36, 0.94);
   --card-elevated: #182035;
-  --border-gold: rgba(255, 215, 0, 0.32);
+  --border-gold: rgba(255, 215, 0, 0.35);
   --border-subtle: rgba(255, 255, 255, 0.08);
   
-  /* 🌟 Gold & Amber Gradient Palette */
   --gold: #FFD700;
   --gold-light: #FFE57F;
   --gold-deep: #FF9E00;
   --amber: #F59E0B;
   --gold-glow: rgba(255, 215, 0, 0.35);
   --gold-grad: linear-gradient(135deg, #FFE259 0%, #FFA751 100%);
-  --gold-grad-soft: linear-gradient(135deg, rgba(255, 215, 0, 0.18) 0%, rgba(255, 158, 0, 0.08) 100%);
   
   --green: #10b981;
   --green-grad: linear-gradient(135deg, #10b981 0%, #059669 100%);
@@ -214,7 +212,7 @@ body {
 }
 .radar-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 11px; font-weight: 900; color: var(--gold); }
 .radar-score-badge {
-  padding: 2px 8px; border-radius: 10px; font-size: 9.5px; font-weight: 900;
+  padding: 3px 9px; border-radius: 10px; font-size: 9.5px; font-weight: 900;
 }
 .radar-score-high { background: rgba(16, 185, 129, 0.2); color: var(--green); border: 1px solid var(--green); }
 .radar-score-mid { background: rgba(255, 215, 0, 0.2); color: var(--gold); border: 1px solid var(--gold); }
@@ -222,7 +220,7 @@ body {
 
 .radar-item {
   display: flex; align-items: center; justify-content: space-between;
-  font-size: 10px; font-weight: 800; padding: 5px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 10.5px; font-weight: 800; padding: 5px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 .radar-item:last-child { border-bottom: none; }
 .r-status { font-weight: 900; }
@@ -283,7 +281,7 @@ body {
   </div>
 </header>
 
-<!-- ⚡ ACTIVE EXPRESS TICKET STATUS (PERSISTENT FROM LOCALSTORAGE) -->
+<!-- ⚡ ACTIVE EXPRESS TICKET STATUS -->
 <div class="active-ticket-card" id="activeTicketCard">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
     <strong style="color:var(--gold);font-size:12px">⚡ EXPRESS PASS ACTIVE</strong>
@@ -454,7 +452,7 @@ body {
   </div>
 
   <button class="btn-submit" id="btnSubmitExpress" disabled style="margin-top:14px" onclick="submitExpressPassRequest()">
-    <span id="submitSpinner" style="display:none">⏳</span> ⚡ የ Express Pass ጥያቄዬን ላክ (100 ETB) ➔
+    <span id="submitSpinner" style="display:none">⏳</span> <span id="btnSubmitLabel">⚡ የ Express Pass ጥያቄዬን ላክ (100 ETB) ➔</span>
   </button>
 
   <button class="btn-inbox" onclick="openAdminInbox()">
@@ -465,28 +463,26 @@ body {
 <div id="toast"></div>
 
 <!-- ════════════════════════════════════════════════════
-     CORE SCRIPT & PERSISTENT AUDIT CONTROLLER
+     CORE SCRIPT & ENHANCED OCR ENGINE
 ════════════════════════════════════════════════════ -->
 <script>
 const RENDER_SERVER_URL  = 'https://fat-server.onrender.com';
 const ADMIN_USERNAME     = 'Swapmoney0';
 const PASS_FEE           = 100;
 
-// CONFIGURATION (ACCORDING TO EXACT SCREENSHOT DATA)
+// ACCOUNTS CONFIG
 const ACCOUNTS = {
   cbe: {
     label: '🏦 የ CBE ባንክ ሂሳብ ቁጥር',
     display: '1000562339427',
     clean: '1000562339427',
-    holder: 'Account Name: Aymen Kemal Ali',
-    keywords: ['aymen', 'kemal', 'ali', '9427', '1000562339427', 'cbe', 'commercial bank']
+    holder: 'Account Name: Aymen Kemal Ali'
   },
   telebirr: {
     label: '📱 የ Telebirr ቁጥር (P2P)',
     display: '09***47',
     clean: '0968260447',
-    holder: 'የአካውንት ስም: Nebyu Mohammed',
-    keywords: ['nebyu', 'mohammed', '0968260447', '251968260447', 'telebirr', 'ethio telecom']
+    holder: 'የአካውንት ስም: Nebyu Mohammed'
   }
 };
 
@@ -496,7 +492,7 @@ let uploadedReceiptFile = null;
 let auditApproved = false;
 let verifiedTxId = '';
 
-// SAFE PERSISTENT STORAGE MANAGER (Never accidentally wipe)
+// SAFE PERSISTENT STORAGE MANAGER
 const StorageManager = {
   getTxList() {
     try {
@@ -547,7 +543,7 @@ if (tg) {
 
 document.getElementById('swapUserIdInput').value = currentUid;
 
-// Restore Active Ticket from LocalStorage
+// Restore Active Ticket
 try {
   const savedTicket = localStorage.getItem('swap_express_ticket_' + currentUid);
   if (savedTicket) {
@@ -623,7 +619,29 @@ function resetAuditState() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   🧠 DEEP EVIDENCE ANALYSIS ENGINE (FAIR & SMART WITH FEE TOLERANCE)
+   🧠 SMART OCR NORMALIZER (FIXES TELEBIRR -101 & NEBYU OCR MISREADS)
+══════════════════════════════════════════════════════════════════ */
+function cleanOcrText(raw) {
+  let s = (raw || '').toLowerCase();
+
+  // 1. Convert all dashes (En-dash, Em-dash, Minus sign, Tilde, Underscore) to standard '-'
+  s = s.replace(/[\u2010-\u2015\u2212\uFE58\uFE63\uFF0D—–−_~]/g, '-');
+
+  // 2. Fix Tesseract misreads of 100/101/102/103 where digits are read as letters (l/I/O)
+  // Example: -l0l.00, -IOI.00, -1O1, -lol, 101.oo
+  s = s.replace(/[-]?\s*[il|1][o0][il|1](?:[.,][o0]{1,2})?/gi, ' 101.00 ');
+  s = s.replace(/[-]?\s*[il|1][o0][o0](?:[.,][o0]{1,2})?/gi, ' 100.00 ');
+  s = s.replace(/[-]?\s*[il|1][o0]2(?:[.,][o0]{1,2})?/gi, ' 102.00 ');
+  s = s.replace(/[-]?\s*[il|1][o0]3(?:[.,][o0]{1,2})?/gi, ' 103.00 ');
+
+  // 3. Normalize spaced decimal points (e.g., "101 . 00" -> "101.00")
+  s = s.replace(/(10[0-3])\s*[.,]\s*([0-9oO]{2})/g, '$1.$2');
+
+  return s;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   🛡️ ULTRA-ROBUST EVIDENCE ANALYSIS ENGINE
 ══════════════════════════════════════════════════════════════════ */
 function analyzeProofEvidence(rawText) {
   const radar = document.getElementById('auditRadarBox');
@@ -636,61 +654,81 @@ function analyzeProofEvidence(rawText) {
   const badge = document.getElementById('radarBadgeState');
   const notice = document.getElementById('radarFeedbackNotice');
 
-  const text = (rawText || '').toLowerCase();
+  const text = cleanOcrText(rawText);
   let score = 0;
 
-  // 1. RECEIVER MATCH
-  const targetKeywords = ACCOUNTS[activeMethod].keywords;
-  const hasTarget = targetKeywords.some(kw => text.includes(kw));
+  // ⚡ AUTO-DETECT PROVIDER (If user selected CBE but uploaded Telebirr, or vice versa, auto switch!)
+  const isTelebirrReceipt = text.includes('transfer money') || text.includes('payment method') || /dj[0-9a-z]{7,14}/i.test(rawText) || text.includes('telebirr');
+  const isCbeReceipt = text.includes('commercial bank') || text.includes('mbreciept') || /ft[0-9a-z]{8,18}/i.test(rawText);
 
-  if (hasTarget) {
-    rTarget.innerHTML = `✅ ${activeMethod === 'cbe' ? 'Aymen Kemal' : 'Nebyu'}`;
-    rTarget.className = 'r-status r-pass';
-    score += 25;
-  } else {
-    // If not exact match, give partial benefit if CBE or Telebirr is indicated
-    if (text.includes('commercial bank') || text.includes('telebirr')) {
-      rTarget.innerHTML = `⚠️ ተቀባይ በኦዲት ይጣራል`;
-      rTarget.className = 'r-status r-maybe';
-      score += 12;
+  if (isTelebirrReceipt && activeMethod !== 'telebirr') {
+    selectPayMethod('telebirr');
+  } else if (isCbeReceipt && activeMethod !== 'cbe') {
+    selectPayMethod('cbe');
+  }
+
+  // 1. RECEIVER MATCH (Fuzzy check for Nebyu or Aymen)
+  let passReceiver = false;
+  if (activeMethod === 'telebirr') {
+    // Nebyu often read as: nebyu, nebyn, nebvu, hebyu, neby, nebiu, or followed by "transaction to"
+    passReceiver = /nebyu|nebyn|nebvu|hebyu|neby|nebiu|neba|mohammed/i.test(rawText) ||
+                   /transaction\s*to/i.test(text) ||
+                   text.includes('neby') || text.includes('nebyu');
+    if (passReceiver) {
+      rTarget.innerHTML = `✅ Nebyu Mohammed`;
+      rTarget.className = 'r-status r-pass';
+      score += 25;
     } else {
-      rTarget.innerHTML = `❌ አልተገኘም`;
-      rTarget.className = 'r-status r-fail';
+      rTarget.innerHTML = `⚠️ ተቀባይ በኦዲት ይረጋገጣል`;
+      rTarget.className = 'r-status r-maybe';
+      score += 15;
+    }
+  } else {
+    // CBE: Aymen Kemal Ali
+    passReceiver = /aym[ea]n|kemal|kamel|ali|9427|1000562339427/i.test(rawText);
+    if (passReceiver) {
+      rTarget.innerHTML = `✅ Aymen Kemal Ali`;
+      rTarget.className = 'r-status r-pass';
+      score += 25;
+    } else {
+      rTarget.innerHTML = `⚠️ ተቀባይ በኦዲት ይረጋገጣል`;
+      rTarget.className = 'r-status r-maybe';
+      score += 15;
     }
   }
 
-  // 2. AMOUNT WITH TELEBIRR FEE TOLERANCE (Up to 3 ETB fee)
+  // 2. AMOUNT MATCH (Accepts 100, 101, 102, 103 ETB)
   let passAmount = false;
-  let detectedAmt = '';
+  let detectedAmt = '100.00';
 
   if (activeMethod === 'telebirr') {
-    // Matches 100, 101, 102, 103, 101.00, -101.00, etc.
-    const teleMatch = text.match(/(?:-|\b)(10[0-3](?:\.\d{1,2})?)\s*(?:\(etb\)|etb|ብር)?/i);
-    if (teleMatch || text.includes('-101.00') || text.includes('101.00') || text.includes('100.00')) {
+    // Look for 100, 101, 102, 103 anywhere in normalized text
+    const amtMatch = text.match(/(?:-|\b)?(10[0-3](?:\.\d{1,2})?)/);
+    if (amtMatch || text.includes('101') || text.includes('100') || text.includes('102') || text.includes('103')) {
       passAmount = true;
-      detectedAmt = teleMatch ? teleMatch[1] : '101.00';
+      detectedAmt = amtMatch ? amtMatch[1] : '101.00';
     }
   } else {
     // CBE Bank: 100 ETB
-    const cbeMatch = text.match(/\b(100(?:\.00)?)\s*(?:etb|ብር)?/i);
-    if (cbeMatch || text.includes('100.00') || text.includes('100 etb')) {
+    const cbeMatch = text.match(/\b(100(?:\.00)?)\b/);
+    if (cbeMatch || text.includes('100')) {
       passAmount = true;
       detectedAmt = '100.00';
     }
   }
 
   if (passAmount) {
-    rAmount.innerHTML = `✅ ${detectedAmt} ETB ተገኝቷል`;
+    rAmount.innerHTML = `✅ ${detectedAmt} ETB ተረጋግጧል`;
     rAmount.className = 'r-status r-pass';
     score += 25;
   } else {
-    rAmount.innerHTML = `⚠️ የ 100 ETB መሆን አለበት`;
+    rAmount.innerHTML = `⚠️ የ 100-103 ETB መሆን አለበት`;
     rAmount.className = 'r-status r-fail';
   }
 
   // 3. TRANSFER OUT / DIRECTION
   const hasIncoming = text.includes('received from') || text.includes('credited to') || text.includes('ገቢ ሆኗል') || text.includes('ተቀብለዋል');
-  const hasOutgoing = text.includes('transferred') || text.includes('debited') || text.includes('transfer money') || text.includes('-101') || text.includes('mb transfer') || text.includes('ወጪ') || text.includes('ተላልፏል');
+  const hasOutgoing = text.includes('transfer') || text.includes('debited') || text.includes('successful') || text.includes('ወጪ') || text.includes('ተላልፏል') || text.includes('payment method');
 
   if (!hasIncoming && hasOutgoing) {
     rDirection.innerHTML = `✅ ወጪ (Transfer Out)`;
@@ -700,26 +738,25 @@ function analyzeProofEvidence(rawText) {
     rDirection.innerHTML = `❌ ውድቅ! ገቢ (Received) ነው`;
     rDirection.className = 'r-status r-fail';
   } else {
-    // Neutral fallback
-    rDirection.innerHTML = `✅ ደረሰኝ ተረጋግጧል`;
+    rDirection.innerHTML = `✅ ዝውውር ተረጋግጧል`;
     rDirection.className = 'r-status r-pass';
-    score += 15;
+    score += 20;
   }
 
   // 4. TXID EXTRACTION & DUPLICATE CHECK
   let foundTx = '';
 
-  // Specific CBE match: FT26... or Transaction ID: ...
-  const ftMatch = rawText.match(/FT[0-9A-Z]{8,18}/i);
-  // Specific Telebirr match: DJ... or DB...
+  // Telebirr regex: DJ... / DB... / DC...
   const djMatch = rawText.match(/(?:DJ|DB|DC)[0-9A-Z]{7,14}/i);
-  // General fallback
+  // CBE regex: FT...
+  const ftMatch = rawText.match(/FT[0-9A-Z]{8,18}/i);
+  // Fallback regex
   const genMatch = rawText.match(/(?:transaction\s*(?:no|number|id)?|txid|ref|ቁጥር)\s*[:.]?\s*([A-Za-z0-9_-]{7,22})/i) ||
                    rawText.match(/mbreciept\.cbe\.com\.et\/([A-Za-z0-9_-]+)/i) ||
                    rawText.match(/receipt\/([A-Za-z0-9]+)/i);
 
-  if (ftMatch) foundTx = ftMatch[0];
-  else if (djMatch) foundTx = djMatch[0];
+  if (djMatch) foundTx = djMatch[0];
+  else if (ftMatch) foundTx = ftMatch[0];
   else if (genMatch) foundTx = genMatch[1];
 
   if (foundTx) {
@@ -730,7 +767,7 @@ function analyzeProofEvidence(rawText) {
       toast('⚠️ ይህ ደረሰኝ (TxID) ከዚህ በፊት ተመዝግቧል! ድጋሚ መላክ አይቻልም።');
       foundTx = '';
     } else {
-      rTxId.innerHTML = `✅ ${foundTx.substring(0, 10)}...`;
+      rTxId.innerHTML = `✅ ${foundTx}`;
       rTxId.className = 'r-status r-pass';
       score += 25;
       verifiedTxId = foundTx;
@@ -743,15 +780,13 @@ function analyzeProofEvidence(rawText) {
     verifiedTxId = '';
   }
 
-  // 🌟 FINAL FAIR DECISION LOGIC:
-  // We do NOT block users if the receipt is convincing (score >= 50%)!
+  // DECISION LOGIC
   if (score >= 70 && foundTx) {
     badge.className = 'radar-score-badge radar-score-high';
     badge.textContent = '✅ ሙሉ በሙሉ ተረጋግጧል (100%)';
-    notice.innerHTML = '🎉 ሁሉም መረጃዎች ተረጋግጠዋል! ጥያቄዎን ወዲያውኑ መላክ ይችላሉ።';
+    notice.innerHTML = '🎉 ሁሉም መረጃዎች በትክክል ተረጋግጠዋል! ጥያቄዎን መላክ ይችላሉ።';
     auditApproved = true;
   } else if (score >= 50) {
-    // Convincing proof! (Maybe slightly blurry text but amount or TxID found)
     badge.className = 'radar-score-badge radar-score-mid';
     badge.textContent = '⚡ አሳማኝ ማረጋገጫ (በአድሚን ይፀድቃል)';
     notice.innerHTML = '📸 ደረሰኙ አሳማኝ መረጃ ይዟል! ጥያቄዎ ለአድሚን በቀጥታ ለፈጣን ኦዲት ይተላለፋል።';
@@ -759,7 +794,7 @@ function analyzeProofEvidence(rawText) {
   } else {
     badge.className = 'radar-score-badge radar-score-low';
     badge.textContent = '❌ አልተረጋገጠም';
-    notice.innerHTML = '⚠️ ምስሉ ላይ የ 100 ETB ክፍያ ወይም ትክክለኛ የባንክ መረጃ አልተገኘም። እባክዎ ጥራት ያለው ስክሪንሾት ይጫኑ ወይም በ SMS ያስገቡ።';
+    notice.innerHTML = '⚠️ ምስሉ ላይ የ 100 ETB ክፍያ ወይም ትክክለኛ የባንክ መረጃ አልተገኘም።';
     auditApproved = false;
   }
 
@@ -767,7 +802,7 @@ function analyzeProofEvidence(rawText) {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   📸 ADVANCED IMAGE PREPROCESSING CANVAS (BOOST OCR ACCURACY)
+   📸 PROCESS RECEIPT FILE
 ══════════════════════════════════════════════════════════════════ */
 async function processOcrReceipt(e) {
   const file = e.target.files[0];
@@ -782,15 +817,14 @@ async function processOcrReceipt(e) {
   };
   reader.readAsDataURL(file);
 
-  toast('⏳ AI ደረሰኙን በጥልቀት እያነበበ ነው... እባክዎ ጥቂት ሰከንዶች ይጠብቁ');
+  toast('⏳ AI ደረሰኙን በጥልቀት እያነበበ ነው... እባክዎ ይጠብቁ');
 
   try {
-    // Use Tesseract directly on the selected file
     const { data: { text } } = await Tesseract.recognize(file, 'eng', {
       logger: m => {}
     });
 
-    if (!text || text.trim().length < 15) {
+    if (!text || text.trim().length < 10) {
       toast('⚠️ ምስሉ ላይ ምንም ጽሁፍ አልተገኘም! እባክዎ ትክክለኛ የደረሰኝ ስክሪንሾት ይጫኑ።');
       resetAuditState();
       return;
@@ -798,7 +832,7 @@ async function processOcrReceipt(e) {
 
     analyzeProofEvidence(text);
   } catch (err) {
-    toast('⚠️ ምስሉን ማንበብ አልተቻለም፤ እባክዎ ጥራት ያለው ፎቶ ይጫኑ ወይም በ SMS ይላኩ');
+    toast('⚠️ ምስሉን ማንበብ አልተቻለም፤ እባክዎ በ SMS ይላኩ');
     resetAuditState();
   }
 }
@@ -813,14 +847,26 @@ function autoParseSmsInput() {
   analyzeProofEvidence(text);
 }
 
+// CHECK BUTTON READINESS
 function checkFormReadiness() {
   const destination = (document.getElementById('payoutDestinationInput').value || '').trim();
   const btn = document.getElementById('btnSubmitExpress');
-  btn.disabled = !(destination.length >= 8 && auditApproved);
+  const btnLabel = document.getElementById('btnSubmitLabel');
+
+  if (!auditApproved) {
+    btn.disabled = true;
+    btnLabel.textContent = '🔒 አስቀድመው ትክክለኛ ደረሰኝ ያረጋግጡ';
+  } else if (destination.length < 8) {
+    btn.disabled = true;
+    btnLabel.textContent = '✍️ መዳረሻ አካውንትዎን በደረጃ 1 ያስገቡ ➔';
+  } else {
+    btn.disabled = false;
+    btnLabel.textContent = '⚡ የ Express Pass ጥያቄዬን ላክ (100 ETB) ➔';
+  }
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   ⚡ SUBMISSION ENGINE WITH LOCALSTORAGE SAFEGUARD
+   ⚡ SUBMISSION ENGINE
 ══════════════════════════════════════════════════════════════════ */
 async function submitExpressPassRequest() {
   const uid = (document.getElementById('swapUserIdInput').value || '').trim();
@@ -851,7 +897,7 @@ async function submitExpressPassRequest() {
   formData.append('vipTier', 'EXPRESS');
   formData.append('amount', PASS_FEE);
   formData.append('txId', finalTx);
-  formData.append('fullSms', `⚡ EXPRESS PASS REQUEST:\n• መዳረሻ አካውንት: ${destination}\n• የማረጋገጫ መንገድ: ${activeProof.toUpperCase()}\n• ማስታወሻ: ${sms || 'Verified Screenshot Attached'}`);
+  formData.append('fullSms', `⚡ EXPRESS PASS REQUEST:\n• መዳረሻ አካውንት: ${destination}\n• ዘዴ: ${activeMethod.toUpperCase()}\n• ማረጋገጫ: ${sms || 'Verified Screenshot Attached'}`);
   formData.append('method', activeMethod === 'cbe' ? 'CBE Bank' : 'Telebirr');
   
   if (activeProof === 'photo' && uploadedReceiptFile) {
@@ -866,10 +912,8 @@ async function submitExpressPassRequest() {
     const data = await res.json();
 
     if (data.status === 'success') {
-      // 1. Save TxID permanently so it cannot be spammed again
       StorageManager.saveTx(finalTx);
 
-      // 2. Save Express Ticket in LocalStorage
       const generatedTicket = '#EX-' + Math.floor(1000 + Math.random() * 9000);
       try {
         localStorage.setItem('swap_express_ticket_' + currentUid, generatedTicket);
@@ -958,7 +1002,7 @@ function updateLiquidityVault() {
 
   document.getElementById('reserveVaultDisplay').textContent = currentPool.toLocaleString();
   document.getElementById('reserveVaultBar').style.width = `${percent}%`;
-  document.getElementById('reserveRemainingPercent').textContent = `${percent}% ቀርቷል (በፍጥነት እያለቀ ነው)`;
+  document.getElementById('reserveRemainingPercent').textContent = `${percent}% ቀርቷል`;
 }
 updateLiquidityVault();
 setInterval(updateLiquidityVault, 10000);
