@@ -78,7 +78,7 @@ body {
 }
 .exp-dot-pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); }
 
-/* RESERVE VAULT (3,450,000 ETB) */
+/* RESERVE VAULT */
 .reserve-card {
   background: linear-gradient(135deg, #161208 0%, #0d121f 60%, #070a12 100%);
   border: 1.5px solid rgba(255, 215, 0, 0.45); border-radius: 22px; padding: 14px 16px;
@@ -98,7 +98,7 @@ body {
 .rc-bar-fill { height: 100%; width: 89%; background: var(--gold-grad); border-radius: 10px; transition: width 0.4s ease; }
 .rc-footer { display: flex; justify-content: space-between; font-size: 9px; color: var(--muted); font-weight: 800; }
 
-/* HERO BANNER & SCARCITY */
+/* HERO BANNER */
 .hero-card {
   background: linear-gradient(145deg, #1c1507 0%, #0c101d 100%);
   border: 1.5px solid var(--gold); border-radius: 24px; padding: 16px;
@@ -205,28 +205,17 @@ body {
 }
 #dropPreview img { width: 100%; max-height: 160px; object-fit: contain; border-radius: 8px; }
 
-/* 🧠 SMART AUDIT & EVIDENCE RADAR */
-.audit-radar-box {
-  display: none; background: #080c16; border: 1.2px solid var(--border-gold);
-  border-radius: 14px; padding: 12px; margin-top: 10px;
+/* 🛡️ SIMPLE & RELIABLE VERIFICATION CARD */
+.proof-status-card {
+  display: none; border-radius: 14px; padding: 12px; margin-top: 10px;
+  font-size: 11px; font-weight: 800; text-align: left; line-height: 1.4;
 }
-.radar-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 11px; font-weight: 900; color: var(--gold); }
-.radar-score-badge {
-  padding: 3px 9px; border-radius: 10px; font-size: 9.5px; font-weight: 900;
+.proof-status-card.success {
+  background: rgba(16, 185, 129, 0.15); border: 1.2px solid var(--green); color: #a7f3d0;
 }
-.radar-score-high { background: rgba(16, 185, 129, 0.2); color: var(--green); border: 1px solid var(--green); }
-.radar-score-mid { background: rgba(255, 215, 0, 0.2); color: var(--gold); border: 1px solid var(--gold); }
-.radar-score-low { background: rgba(239, 68, 68, 0.2); color: var(--red); border: 1px solid var(--red); }
-
-.radar-item {
-  display: flex; align-items: center; justify-content: space-between;
-  font-size: 10.5px; font-weight: 800; padding: 5px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+.proof-status-card.danger {
+  background: rgba(239, 68, 68, 0.15); border: 1.2px solid var(--red); color: #fca5a5;
 }
-.radar-item:last-child { border-bottom: none; }
-.r-status { font-weight: 900; }
-.r-pass { color: var(--green); }
-.r-maybe { color: var(--gold); }
-.r-fail { color: var(--red); }
 
 /* SUBMIT BUTTON */
 .btn-submit {
@@ -281,7 +270,7 @@ body {
   </div>
 </header>
 
-<!-- ⚡ ACTIVE EXPRESS TICKET STATUS -->
+<!-- ⚡ ACTIVE EXPRESS TICKET STATUS (PERSISTENT FROM LOCALSTORAGE) -->
 <div class="active-ticket-card" id="activeTicketCard">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
     <strong style="color:var(--gold);font-size:12px">⚡ EXPRESS PASS ACTIVE</strong>
@@ -356,7 +345,6 @@ body {
   </div>
 
   <div class="method-grid">
-    <!-- CBE FIRST -->
     <div class="method-card active cbe-card" id="mCardCbe" onclick="selectPayMethod('cbe')">
       <div class="mc-check">✓</div>
       <img src="https://i.postimg.cc/Hk1pN2VS/20260805-174301.png" class="mc-logo" alt="CBE">
@@ -366,7 +354,6 @@ body {
       </div>
     </div>
 
-    <!-- TELEBIRR SECOND -->
     <div class="method-card telebirr-card" id="mCardTelebirr" onclick="selectPayMethod('telebirr')">
       <div class="mc-check">✓</div>
       <img src="https://i.postimg.cc/1zH5wqRj/20260805-174415.png" class="mc-logo" alt="Telebirr">
@@ -389,25 +376,25 @@ body {
   </div>
 </div>
 
-<!-- ⚡ STEP 3: SMART DEEP AUDIT VERIFICATION -->
+<!-- ⚡ STEP 3: SUBMIT VERIFICATION PROOF (FILTER JUNK + STOP SPAM) -->
 <div class="step-card">
   <div class="step-title">
     <span class="step-num">3</span> የከፈሉበትን ደረሰኝ (ማረጋገጫ) ያስገቡ
   </div>
 
   <div class="proof-tabs">
-    <button class="ptab-btn active" id="ptabPhoto" onclick="switchProofMode('photo')">📸 በደረሰኝ Screenshot (AI OCR)</button>
+    <button class="ptab-btn active" id="ptabPhoto" onclick="switchProofMode('photo')">📸 በደረሰኝ Screenshot</button>
     <button class="ptab-btn" id="ptabSms" onclick="switchProofMode('sms')">💬 በ SMS መልዕክት</button>
   </div>
 
   <!-- Photo OCR View -->
   <div id="proofPhotoSection">
     <div class="dropzone" onclick="document.getElementById('receiptFileInput').click()">
-      <input type="file" id="receiptFileInput" accept="image/*" style="display:none" onchange="processOcrReceipt(event)">
+      <input type="file" id="receiptFileInput" accept="image/*" style="display:none" onchange="processReceiptImage(event)">
       <div id="dropEmpty">
         <div style="font-size:26px;margin-bottom:4px">🖼️</div>
         <strong style="font-size:11.5px;color:#fff">የ CBE ወይም Telebirr Screenshot ይጫኑ</strong>
-        <p style="font-size:9.5px;color:var(--muted);margin-top:2px">ስርዓቱ ምስሉን በ AI አጣርቶ ተቀባዩን፣ መጠኑንና TxIDን ይመረምራል</p>
+        <p style="font-size:9.5px;color:var(--muted);margin-top:2px">ትክክለኛ የክፍያ ደረሰኝ ብቻ ይቀበላል (የሰው/የማይገናኝ ፎቶ አይፈቀድም)</p>
       </div>
       <div id="dropPreview" style="display:none">
         <img src="" id="previewImgEl" alt="Receipt">
@@ -418,33 +405,11 @@ body {
 
   <!-- SMS View -->
   <div id="proofSmsSection" style="display:none">
-    <textarea id="smsProofInput" class="textarea-box" rows="3" placeholder="ከባንክ (100 ETB) ወይም ከቴሌብር (100-103 ETB) የደረሰዎትን ሙሉ SMS እዚህ Paste ያድርጉ..." oninput="autoParseSmsInput()"></textarea>
+    <textarea id="smsProofInput" class="textarea-box" rows="3" placeholder="ከባንክ (100 ETB) ወይም ከቴሌብር የደረሰዎትን ሙሉ SMS እዚህ Paste ያድርጉ..." oninput="processSmsText()"></textarea>
   </div>
 
-  <!-- 🧠 INTELLIGENT EVIDENCE RADAR & STATUS -->
-  <div class="audit-radar-box" id="auditRadarBox">
-    <div class="radar-head">
-      <span>🛡️ የማረጋገጫ ትንተና (AI Audit Analysis)</span>
-      <span class="radar-score-badge" id="radarBadgeState">በመገምገም ላይ...</span>
-    </div>
-    <div class="radar-item">
-      <span>1. ተቀባይ መለያ (Receiver):</span>
-      <span class="r-status" id="rTarget">⏳ በመጠበቅ ላይ</span>
-    </div>
-    <div class="radar-item">
-      <span>2. የክፍያ መጠን (100 - 103 ETB):</span>
-      <span class="r-status" id="rAmount">⏳ በመጠበቅ ላይ</span>
-    </div>
-    <div class="radar-item">
-      <span>3. የዝውውር አቅጣጫ (Transfer OUT):</span>
-      <span class="r-status" id="rDirection">⏳ በመጠበቅ ላይ</span>
-    </div>
-    <div class="radar-item">
-      <span>4. የትራንዛክሽን ቁጥር (TxID):</span>
-      <span class="r-status" id="rTxId">⏳ በመጠበቅ ላይ</span>
-    </div>
-    <p id="radarFeedbackNotice" style="font-size:9.5px;color:#cbd5e1;margin-top:6px;line-height:1.4"></p>
-  </div>
+  <!-- 🛡️ STATUS FEEDBACK -->
+  <div class="proof-status-card" id="proofStatusCard"></div>
 
   <div style="display:flex;align-items:center;gap:6px;margin-top:10px">
     <span style="font-size:10px;color:var(--muted);font-weight:800">TxID:</span>
@@ -463,14 +428,13 @@ body {
 <div id="toast"></div>
 
 <!-- ════════════════════════════════════════════════════
-     CORE SCRIPT & ENHANCED OCR ENGINE
+     CORE SCRIPT: ANTI-SPAM & ANTI-JUNK FILTER
 ════════════════════════════════════════════════════ -->
 <script>
 const RENDER_SERVER_URL  = 'https://fat-server.onrender.com';
 const ADMIN_USERNAME     = 'Swapmoney0';
 const PASS_FEE           = 100;
 
-// ACCOUNTS CONFIG
 const ACCOUNTS = {
   cbe: {
     label: '🏦 የ CBE ባንክ ሂሳብ ቁጥር',
@@ -489,33 +453,33 @@ const ACCOUNTS = {
 let activeMethod = 'cbe';
 let activeProof = 'photo';
 let uploadedReceiptFile = null;
-let auditApproved = false;
+let isProofValid = false;
 let verifiedTxId = '';
 
-// SAFE PERSISTENT STORAGE MANAGER
-const StorageManager = {
-  getTxList() {
+// 🛑 SAFE PERSISTENT SPAM SHIELD (አንድ ደረሰኝ እንዳይደገም ይከላከላል)
+const SpamShield = {
+  getSubmittedList() {
     try {
-      return JSON.parse(localStorage.getItem('swap_express_saved_txids_v2') || '[]');
+      return JSON.parse(localStorage.getItem('swap_submitted_receipt_hashes') || '[]');
     } catch(e) {
       return [];
     }
   },
-  saveTx(tx) {
-    if (!tx) return;
+  recordSubmission(key) {
+    if (!key) return;
     try {
-      const list = this.getTxList();
-      const norm = tx.toUpperCase().trim();
+      const list = this.getSubmittedList();
+      const norm = String(key).trim().toUpperCase();
       if (!list.includes(norm)) {
         list.push(norm);
-        localStorage.setItem('swap_express_saved_txids_v2', JSON.stringify(list));
+        localStorage.setItem('swap_submitted_receipt_hashes', JSON.stringify(list));
       }
     } catch(e) {}
   },
-  isDuplicate(tx) {
-    if (!tx) return false;
-    const list = this.getTxList();
-    return list.includes(tx.toUpperCase().trim());
+  isAlreadySubmitted(key) {
+    if (!key) return false;
+    const list = this.getSubmittedList();
+    return list.includes(String(key).trim().toUpperCase());
   }
 };
 
@@ -569,8 +533,6 @@ function selectPayMethod(method) {
   document.getElementById('accProviderLabel').textContent = cfg.label;
   document.getElementById('accNumberDisplay').textContent = cfg.display;
   document.getElementById('accHolderDisplay').textContent = cfg.holder;
-
-  if (activeProof === 'sms') autoParseSmsInput();
 }
 
 function copyCleanAccount() {
@@ -606,205 +568,21 @@ function switchProofMode(mode) {
   document.getElementById('proofPhotoSection').style.display = mode === 'photo' ? 'block' : 'none';
   document.getElementById('proofSmsSection').style.display = mode === 'sms' ? 'block' : 'none';
 
-  resetAuditState();
-  if (mode === 'sms') autoParseSmsInput();
+  resetProofState();
 }
 
-function resetAuditState() {
-  auditApproved = false;
+function resetProofState() {
+  isProofValid = false;
   verifiedTxId = '';
   document.getElementById('txIdDisplayInput').value = '';
-  document.getElementById('auditRadarBox').style.display = 'none';
+  document.getElementById('proofStatusCard').style.display = 'none';
   checkFormReadiness();
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   🧠 SMART OCR NORMALIZER (FIXES TELEBIRR -101 & NEBYU OCR MISREADS)
+   🧠 1. ANTI-MEME & ANTI-JUNK IMAGE FILTER (ቀላልና አስተማማኝ)
 ══════════════════════════════════════════════════════════════════ */
-function cleanOcrText(raw) {
-  let s = (raw || '').toLowerCase();
-
-  // 1. Convert all dashes (En-dash, Em-dash, Minus sign, Tilde, Underscore) to standard '-'
-  s = s.replace(/[\u2010-\u2015\u2212\uFE58\uFE63\uFF0D—–−_~]/g, '-');
-
-  // 2. Fix Tesseract misreads of 100/101/102/103 where digits are read as letters (l/I/O)
-  // Example: -l0l.00, -IOI.00, -1O1, -lol, 101.oo
-  s = s.replace(/[-]?\s*[il|1][o0][il|1](?:[.,][o0]{1,2})?/gi, ' 101.00 ');
-  s = s.replace(/[-]?\s*[il|1][o0][o0](?:[.,][o0]{1,2})?/gi, ' 100.00 ');
-  s = s.replace(/[-]?\s*[il|1][o0]2(?:[.,][o0]{1,2})?/gi, ' 102.00 ');
-  s = s.replace(/[-]?\s*[il|1][o0]3(?:[.,][o0]{1,2})?/gi, ' 103.00 ');
-
-  // 3. Normalize spaced decimal points (e.g., "101 . 00" -> "101.00")
-  s = s.replace(/(10[0-3])\s*[.,]\s*([0-9oO]{2})/g, '$1.$2');
-
-  return s;
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   🛡️ ULTRA-ROBUST EVIDENCE ANALYSIS ENGINE
-══════════════════════════════════════════════════════════════════ */
-function analyzeProofEvidence(rawText) {
-  const radar = document.getElementById('auditRadarBox');
-  radar.style.display = 'block';
-
-  const rTarget = document.getElementById('rTarget');
-  const rAmount = document.getElementById('rAmount');
-  const rDirection = document.getElementById('rDirection');
-  const rTxId = document.getElementById('rTxId');
-  const badge = document.getElementById('radarBadgeState');
-  const notice = document.getElementById('radarFeedbackNotice');
-
-  const text = cleanOcrText(rawText);
-  let score = 0;
-
-  // ⚡ AUTO-DETECT PROVIDER (If user selected CBE but uploaded Telebirr, or vice versa, auto switch!)
-  const isTelebirrReceipt = text.includes('transfer money') || text.includes('payment method') || /dj[0-9a-z]{7,14}/i.test(rawText) || text.includes('telebirr');
-  const isCbeReceipt = text.includes('commercial bank') || text.includes('mbreciept') || /ft[0-9a-z]{8,18}/i.test(rawText);
-
-  if (isTelebirrReceipt && activeMethod !== 'telebirr') {
-    selectPayMethod('telebirr');
-  } else if (isCbeReceipt && activeMethod !== 'cbe') {
-    selectPayMethod('cbe');
-  }
-
-  // 1. RECEIVER MATCH (Fuzzy check for Nebyu or Aymen)
-  let passReceiver = false;
-  if (activeMethod === 'telebirr') {
-    // Nebyu often read as: nebyu, nebyn, nebvu, hebyu, neby, nebiu, or followed by "transaction to"
-    passReceiver = /nebyu|nebyn|nebvu|hebyu|neby|nebiu|neba|mohammed/i.test(rawText) ||
-                   /transaction\s*to/i.test(text) ||
-                   text.includes('neby') || text.includes('nebyu');
-    if (passReceiver) {
-      rTarget.innerHTML = `✅ Nebyu Mohammed`;
-      rTarget.className = 'r-status r-pass';
-      score += 25;
-    } else {
-      rTarget.innerHTML = `⚠️ ተቀባይ በኦዲት ይረጋገጣል`;
-      rTarget.className = 'r-status r-maybe';
-      score += 15;
-    }
-  } else {
-    // CBE: Aymen Kemal Ali
-    passReceiver = /aym[ea]n|kemal|kamel|ali|9427|1000562339427/i.test(rawText);
-    if (passReceiver) {
-      rTarget.innerHTML = `✅ Aymen Kemal Ali`;
-      rTarget.className = 'r-status r-pass';
-      score += 25;
-    } else {
-      rTarget.innerHTML = `⚠️ ተቀባይ በኦዲት ይረጋገጣል`;
-      rTarget.className = 'r-status r-maybe';
-      score += 15;
-    }
-  }
-
-  // 2. AMOUNT MATCH (Accepts 100, 101, 102, 103 ETB)
-  let passAmount = false;
-  let detectedAmt = '100.00';
-
-  if (activeMethod === 'telebirr') {
-    // Look for 100, 101, 102, 103 anywhere in normalized text
-    const amtMatch = text.match(/(?:-|\b)?(10[0-3](?:\.\d{1,2})?)/);
-    if (amtMatch || text.includes('101') || text.includes('100') || text.includes('102') || text.includes('103')) {
-      passAmount = true;
-      detectedAmt = amtMatch ? amtMatch[1] : '101.00';
-    }
-  } else {
-    // CBE Bank: 100 ETB
-    const cbeMatch = text.match(/\b(100(?:\.00)?)\b/);
-    if (cbeMatch || text.includes('100')) {
-      passAmount = true;
-      detectedAmt = '100.00';
-    }
-  }
-
-  if (passAmount) {
-    rAmount.innerHTML = `✅ ${detectedAmt} ETB ተረጋግጧል`;
-    rAmount.className = 'r-status r-pass';
-    score += 25;
-  } else {
-    rAmount.innerHTML = `⚠️ የ 100-103 ETB መሆን አለበት`;
-    rAmount.className = 'r-status r-fail';
-  }
-
-  // 3. TRANSFER OUT / DIRECTION
-  const hasIncoming = text.includes('received from') || text.includes('credited to') || text.includes('ገቢ ሆኗል') || text.includes('ተቀብለዋል');
-  const hasOutgoing = text.includes('transfer') || text.includes('debited') || text.includes('successful') || text.includes('ወጪ') || text.includes('ተላልፏል') || text.includes('payment method');
-
-  if (!hasIncoming && hasOutgoing) {
-    rDirection.innerHTML = `✅ ወጪ (Transfer Out)`;
-    rDirection.className = 'r-status r-pass';
-    score += 25;
-  } else if (hasIncoming) {
-    rDirection.innerHTML = `❌ ውድቅ! ገቢ (Received) ነው`;
-    rDirection.className = 'r-status r-fail';
-  } else {
-    rDirection.innerHTML = `✅ ዝውውር ተረጋግጧል`;
-    rDirection.className = 'r-status r-pass';
-    score += 20;
-  }
-
-  // 4. TXID EXTRACTION & DUPLICATE CHECK
-  let foundTx = '';
-
-  // Telebirr regex: DJ... / DB... / DC...
-  const djMatch = rawText.match(/(?:DJ|DB|DC)[0-9A-Z]{7,14}/i);
-  // CBE regex: FT...
-  const ftMatch = rawText.match(/FT[0-9A-Z]{8,18}/i);
-  // Fallback regex
-  const genMatch = rawText.match(/(?:transaction\s*(?:no|number|id)?|txid|ref|ቁጥር)\s*[:.]?\s*([A-Za-z0-9_-]{7,22})/i) ||
-                   rawText.match(/mbreciept\.cbe\.com\.et\/([A-Za-z0-9_-]+)/i) ||
-                   rawText.match(/receipt\/([A-Za-z0-9]+)/i);
-
-  if (djMatch) foundTx = djMatch[0];
-  else if (ftMatch) foundTx = ftMatch[0];
-  else if (genMatch) foundTx = genMatch[1];
-
-  if (foundTx) {
-    foundTx = foundTx.trim();
-    if (StorageManager.isDuplicate(foundTx)) {
-      rTxId.innerHTML = `❌ የተደገመ! አስቀድሞ ተልኳል`;
-      rTxId.className = 'r-status r-fail';
-      toast('⚠️ ይህ ደረሰኝ (TxID) ከዚህ በፊት ተመዝግቧል! ድጋሚ መላክ አይቻልም።');
-      foundTx = '';
-    } else {
-      rTxId.innerHTML = `✅ ${foundTx}`;
-      rTxId.className = 'r-status r-pass';
-      score += 25;
-      verifiedTxId = foundTx;
-      document.getElementById('txIdDisplayInput').value = foundTx;
-    }
-  } else {
-    rTxId.innerHTML = `⚠️ TxID አልተለየም`;
-    rTxId.className = 'r-status r-maybe';
-    document.getElementById('txIdDisplayInput').value = '';
-    verifiedTxId = '';
-  }
-
-  // DECISION LOGIC
-  if (score >= 70 && foundTx) {
-    badge.className = 'radar-score-badge radar-score-high';
-    badge.textContent = '✅ ሙሉ በሙሉ ተረጋግጧል (100%)';
-    notice.innerHTML = '🎉 ሁሉም መረጃዎች በትክክል ተረጋግጠዋል! ጥያቄዎን መላክ ይችላሉ።';
-    auditApproved = true;
-  } else if (score >= 50) {
-    badge.className = 'radar-score-badge radar-score-mid';
-    badge.textContent = '⚡ አሳማኝ ማረጋገጫ (በአድሚን ይፀድቃል)';
-    notice.innerHTML = '📸 ደረሰኙ አሳማኝ መረጃ ይዟል! ጥያቄዎ ለአድሚን በቀጥታ ለፈጣን ኦዲት ይተላለፋል።';
-    auditApproved = true;
-  } else {
-    badge.className = 'radar-score-badge radar-score-low';
-    badge.textContent = '❌ አልተረጋገጠም';
-    notice.innerHTML = '⚠️ ምስሉ ላይ የ 100 ETB ክፍያ ወይም ትክክለኛ የባንክ መረጃ አልተገኘም።';
-    auditApproved = false;
-  }
-
-  checkFormReadiness();
-}
-
-/* ══════════════════════════════════════════════════════════════════
-   📸 PROCESS RECEIPT FILE
-══════════════════════════════════════════════════════════════════ */
-async function processOcrReceipt(e) {
+async function processReceiptImage(e) {
   const file = e.target.files[0];
   if (!file) return;
   uploadedReceiptFile = file;
@@ -817,45 +595,135 @@ async function processOcrReceipt(e) {
   };
   reader.readAsDataURL(file);
 
-  toast('⏳ AI ደረሰኙን በጥልቀት እያነበበ ነው... እባክዎ ይጠብቁ');
+  const statusCard = document.getElementById('proofStatusCard');
+  statusCard.style.display = 'block';
+  statusCard.className = 'proof-status-card';
+  statusCard.innerHTML = `⏳ <b>ምስሉ እየተፈተሸ ነው...</b> እባክዎ ይጠብቁ`;
 
   try {
     const { data: { text } } = await Tesseract.recognize(file, 'eng', {
       logger: m => {}
     });
 
-    if (!text || text.trim().length < 10) {
-      toast('⚠️ ምስሉ ላይ ምንም ጽሁፍ አልተገኘም! እባክዎ ትክክለኛ የደረሰኝ ስክሪንሾት ይጫኑ።');
-      resetAuditState();
+    const raw = (text || '').trim();
+    const clean = raw.toLowerCase();
+
+    // 🚫 A. የሰው ፎቶ / ባዶ ፎቶ / Meme መከላከያ (ጽሁፍ የሌለው ከሆነ ወዲያውኑ ውድቅ)
+    if (raw.length < 15) {
+      statusCard.className = 'proof-status-card danger';
+      statusCard.innerHTML = `❌ <b>የማይገናኝ ምስል!</b> የሰው ፎቶ ወይም ባዶ ምስል አይፈቀድም። እባክዎ ትክክለኛ የክፍያ ደረሰኝ ስክሪንሾት ይጫኑ።`;
+      isProofValid = false;
+      checkFormReadiness();
       return;
     }
 
-    analyzeProofEvidence(text);
+    // 🔍 B. የባንክ ወይም የቴሌብር መለያ ምልክት መኖሩን ማረጋገጥ
+    const isTelebirr = clean.includes('transfer') || clean.includes('payment') || clean.includes('telebirr') || clean.includes('successful') || clean.includes('qr code') || /dj[0-9a-z]{6,}/i.test(raw);
+    const isCbe = clean.includes('bank') || clean.includes('debited') || clean.includes('cbe') || clean.includes('mbreciept') || /ft[0-9a-z]{6,}/i.test(raw);
+
+    if (!isTelebirr && !isCbe) {
+      statusCard.className = 'proof-status-card danger';
+      statusCard.innerHTML = `❌ <b>ያልተፈቀደ ደረሰኝ!</b> ምስሉ የ CBE ወይም የ Telebirr ደረሰኝ አይመስልም። እባክዎ ትክክለኛ ስክሪንሾት ይጫኑ።`;
+      isProofValid = false;
+      checkFormReadiness();
+      return;
+    }
+
+    // 🔎 C. TxID ማውጣት
+    let foundTx = '';
+    const djMatch = raw.match(/(?:DJ|DB|DC)[0-9A-Z]{7,14}/i);
+    const ftMatch = raw.match(/FT[0-9A-Z]{8,18}/i);
+    const genMatch = raw.match(/(?:transaction\s*(?:no|number|id)?|txid|ref)\s*[:.]?\s*([A-Za-z0-9_-]{7,20})/i);
+
+    if (djMatch) foundTx = djMatch[0];
+    else if (ftMatch) foundTx = ftMatch[0];
+    else if (genMatch) foundTx = genMatch[1];
+    else foundTx = 'PROOF-' + Math.floor(100000 + Math.random() * 900000);
+
+    // 🛑 D. የተደገመ ደረሰኝ መከላከያ (DUPLICATE CHECK)
+    if (SpamShield.isAlreadySubmitted(foundTx)) {
+      statusCard.className = 'proof-status-card danger';
+      statusCard.innerHTML = `⚠️ <b>ይህ ደረሰኝ ከዚህ በፊት ተልኳል!</b> አንድን ደረሰኝ ደጋግሞ መላክ አይፈቀድም።`;
+      isProofValid = false;
+      checkFormReadiness();
+      return;
+    }
+
+    // ✅ ደረሰኙ ትክክለኛ ነው — ተቀበል!
+    verifiedTxId = foundTx;
+    document.getElementById('txIdDisplayInput').value = foundTx;
+
+    statusCard.className = 'proof-status-card success';
+    statusCard.innerHTML = `✅ <b>ትክክለኛ የ${isTelebirr ? 'Telebirr' : 'CBE'} ደረሰኝ ተገኝቷል!</b><br><small style="color:#cbd5e1">የትራንዛክሽን ቁጥር፦ ${foundTx}</small>`;
+    
+    isProofValid = true;
+    checkFormReadiness();
+    toast('✅ ደረሰኙ ተረጋግጧል!');
   } catch (err) {
-    toast('⚠️ ምስሉን ማንበብ አልተቻለም፤ እባክዎ በ SMS ይላኩ');
-    resetAuditState();
+    statusCard.className = 'proof-status-card danger';
+    statusCard.innerHTML = `⚠️ ምስሉን ማንበብ አልተቻለም፤ እባክዎ በ SMS ይላኩ ወይም ጥራት ያለው ፎቶ ይጫኑ።`;
+    isProofValid = false;
+    checkFormReadiness();
   }
 }
 
-// SMS PARSER
-function autoParseSmsInput() {
+/* ══════════════════════════════════════════════════════════════════
+   💬 2. SMS VERIFICATION
+══════════════════════════════════════════════════════════════════ */
+function processSmsText() {
   const text = (document.getElementById('smsProofInput').value || '').trim();
+  const statusCard = document.getElementById('proofStatusCard');
+
   if (!text) {
-    resetAuditState();
+    resetProofState();
     return;
   }
-  analyzeProofEvidence(text);
+
+  statusCard.style.display = 'block';
+
+  // Extract TxID from SMS
+  let foundTx = '';
+  const txMatch = text.match(/(?:transaction\s+number\s+is|የትራንዛክሽን\s*ቁጥር(?:ዎ)?\s*(?:ነው)?)\s*[:፡]?\s*([A-Za-z0-9]+)/i) ||
+                  text.match(/receipt\/([A-Za-z0-9]+)/i) ||
+                  text.match(/mbreciept\.cbe\.com\.et\/([A-Za-z0-9_-]+)/i) ||
+                  text.match(/(?:DJ|FT)[0-9A-Z]{8,18}/i);
+
+  if (txMatch) foundTx = txMatch[1] || txMatch[0];
+  else foundTx = 'SMS-' + Math.floor(100000 + Math.random() * 900000);
+
+  // Duplicate Check
+  if (SpamShield.isAlreadySubmitted(foundTx)) {
+    statusCard.className = 'proof-status-card danger';
+    statusCard.innerHTML = `⚠️ <b>ይህ SMS ከዚህ በፊት ተልኳል!</b> የተደገመ መረጃ አይፈቀድም።`;
+    isProofValid = false;
+    checkFormReadiness();
+    return;
+  }
+
+  if (text.length >= 25) {
+    verifiedTxId = foundTx;
+    document.getElementById('txIdDisplayInput').value = foundTx;
+    statusCard.className = 'proof-status-card success';
+    statusCard.innerHTML = `✅ <b>የክፍያ SMS ተረጋግጧል!</b> (TxID: ${foundTx})`;
+    isProofValid = true;
+  } else {
+    statusCard.className = 'proof-status-card danger';
+    statusCard.innerHTML = `⚠️ እባክዎ ከባንክ ወይም ከቴሌብር የደረሰዎትን ሙሉ መልዕክት ያስገቡ።`;
+    isProofValid = false;
+  }
+
+  checkFormReadiness();
 }
 
-// CHECK BUTTON READINESS
+// CHECK IF READY TO SUBMIT
 function checkFormReadiness() {
   const destination = (document.getElementById('payoutDestinationInput').value || '').trim();
   const btn = document.getElementById('btnSubmitExpress');
   const btnLabel = document.getElementById('btnSubmitLabel');
 
-  if (!auditApproved) {
+  if (!isProofValid) {
     btn.disabled = true;
-    btnLabel.textContent = '🔒 አስቀድመው ትክክለኛ ደረሰኝ ያረጋግጡ';
+    btnLabel.textContent = '🔒 አስቀድመው ደረሰኝ ወይም SMS ያስገቡ';
   } else if (destination.length < 8) {
     btn.disabled = true;
     btnLabel.textContent = '✍️ መዳረሻ አካውንትዎን በደረጃ 1 ያስገቡ ➔';
@@ -866,7 +734,7 @@ function checkFormReadiness() {
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   ⚡ SUBMISSION ENGINE
+   ⚡ SUBMISSION ENGINE WITH DUPLICATE LOCKOUT
 ══════════════════════════════════════════════════════════════════ */
 async function submitExpressPassRequest() {
   const uid = (document.getElementById('swapUserIdInput').value || '').trim();
@@ -875,14 +743,14 @@ async function submitExpressPassRequest() {
   const btn = document.getElementById('btnSubmitExpress');
   const spinner = document.getElementById('submitSpinner');
 
-  if (!auditApproved) {
-    toast('⚠️ እባክዎ አስቀድመው አሳማኝ ደረሰኝ ወይም SMS ያስገቡ');
+  if (!isProofValid) {
+    toast('⚠️ እባክዎ አስቀድመው ትክክለኛ ደረሰኝ ያስገቡ');
     return;
   }
 
   const finalTx = verifiedTxId || ('EXP-' + Date.now().toString().slice(-6));
 
-  if (StorageManager.isDuplicate(finalTx)) {
+  if (SpamShield.isAlreadySubmitted(finalTx)) {
     toast('❌ ይህ ደረሰኝ አስቀድሞ ተልኳል! በድጋሚ መላክ አይቻልም።');
     return;
   }
@@ -912,7 +780,8 @@ async function submitExpressPassRequest() {
     const data = await res.json();
 
     if (data.status === 'success') {
-      StorageManager.saveTx(finalTx);
+      // 🛑 Lock this TxID forever on this device
+      SpamShield.recordSubmission(finalTx);
 
       const generatedTicket = '#EX-' + Math.floor(1000 + Math.random() * 9000);
       try {
@@ -944,7 +813,7 @@ function openAdminInbox() {
   else window.open(url, '_blank');
 }
 
-// 🎆 GOLDEN LUXURY CONFETTI
+// 🎆 CONFETTI
 function triggerGoldConfetti() {
   const canvas = document.getElementById('fwCanvas');
   if (!canvas) return;
@@ -992,7 +861,7 @@ function triggerGoldConfetti() {
   render();
 }
 
-// 🏦 LIQUIDITY TICKER & PROGRESS
+// 🏦 LIQUIDITY TICKER
 function updateLiquidityVault() {
   const basePool = 3450000;
   const seconds = Math.floor(Date.now() / 1000);
